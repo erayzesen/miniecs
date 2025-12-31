@@ -1,0 +1,6 @@
+*
+!.gitignore
+!miniecs.nim
+!miniecs_benchmark.nim
+!readme.md
+!LICENSE
