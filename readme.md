@@ -105,6 +105,90 @@ Performance is highly subjective and depends on specific use cases. As the devel
 
 *Note: If your project requires extreme, microsecond-critical performance, I recommend designing a custom Data-Oriented structure tailored specifically to that project's needs. For most use cases, however, MiniECS will be more than sufficient.*
 
+## API
+The entire API is basically the cheatsheet below. 
+
+<details>
+<summary> Cheatsheet </summary>
+
+```Nim
+import miniecs
+
+# --- 1. SETUP ---
+# Initialize the ECS World instance
+let ecs = newMiniECS()
+
+# Define your data-only components (PODs preferred)
+type
+  Position = object
+    x, y: float32
+  Velocity = object
+    vx, vy: float32
+  PlayerTag = object # Empty tag component
+
+# --- 2. ENTITY MANAGEMENT ---
+
+# Create a new entity (Returns an Entity handle)
+var ent = ecs.newEntity()
+
+# Get an existing entity by ID (Safety: asserts alive and in-bounds)
+var sameEnt = ecs.getEntity(ent.id)
+
+# Get the count of currently active (alive) entities
+let activeCount = ecs.getEntityCount()
+
+# Destroy entity (Cleans up all components and enables recycling)
+ent.destroy()                 # Handle-based
+# ecs.destroy(ent.id)        # ID-based (Fastest for batches)
+
+# --- 3. COMPONENT MANAGEMENT ---
+
+# Add/Update Component
+ent.addComponent(Position(x: 10, y: 10))        # Handle-based
+# ecs.addComponent(ent.id, Velocity(vx: 1, vy: 1), ecs) # ID-based
+
+# Remove Component
+ent.removeComponent(Position)                   # Handle-based
+# ecs.removeComponent(ent.id, Position, ecs)    # ID-based
+
+# Check Component Existence
+if ent.hasComponent(Position): discard          # Handle-based
+# if hasComponent(ent.id, Position, ecs): discard # ID-based
+
+# --- 4. COMPONENT ACCESS & MANIPULATION ---
+
+# Direct Field Manipulation (One-liner)
+# Since getComponent returns 'var T', you can modify fields directly
+ent.getComponent(Position).x += 5.0             # Handle-based
+# ecs.getComponent(ent.id, Position, ecs).y = 0.0 # ID-based
+
+# Using 'addr' for manual optimization (Avoids hidden copies in some Nim versions)
+var pos = addr ent.getComponent(Position)
+pos.y = 20.0
+
+# --- 5. HIGH-PERFORMANCE QUERIES (ITERATORS) ---
+
+# MiniECS supports querying up to 6 components simultaneously.
+# Iterators return (EntityID, ptr T1, ptr T2, ...)
+# Pointers (ptr) allow direct memory manipulation without copying.
+
+# Single Component Query
+for id, pos in ecs.allWith(Position):
+  pos.x += 1.0
+
+# Multiple Component Query (Fastest: Iterates over the smallest pool)
+for id, pos, vel in ecs.allWith(Position, Velocity):
+  pos.x += vel.vx
+  pos.y += vel.vy
+
+# --- 6. UTILITIES ---
+
+# Wipe everything (Entities, Pools, Bitmasks)
+ecs.clearAll()
+```
+</details>
+
+
 ## **Contributing**
 
 * Bug reports are welcome.  

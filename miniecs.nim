@@ -109,6 +109,17 @@ proc newEntity*(ecs: MiniECS): Entity =
     ecs.entities.add(Entity(id: id, components: 0, alive: true, owner: ecs))
     return ecs.entities[id]
 
+## Returns an Entity with ID
+proc getEntity*(ecs:MiniECS, id:int): var Entity = 
+  assert id >= 0 and id < ecs.entities.len, "Entity ID out of bounds"
+  assert ecs.entities[id].alive, "Attempted to access a dead entity with ID: " & $id
+  return ecs.entities[id]
+
+## Returns Entity Count
+proc getEntityCount*(ecs:MiniECS) : int =
+  result=ecs.entities.len-ecs.freeEntities.len
+  
+
 ## Checks if an entity has a specific component via its bitmask.
 proc hasComponent(entity: var Entity, componentBitCode: int): bool =
     result = (entity.components and componentBitCode) != 0
