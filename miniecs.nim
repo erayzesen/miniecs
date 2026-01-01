@@ -1,3 +1,9 @@
+#   MIT License - Copyright (c) 2026 Eray Zesen
+#   Repository: https://github.com/erayzesen/miniecs
+#   License information: https://github.com/erayzesen/miniecs/blob/master/LICENSE
+
+#   Version: 1.0.0
+
 import tables, std/[sequtils,macros], typetraits
 
 type
@@ -178,7 +184,7 @@ proc removeComponent*[T](entity: var Entity, _: typedesc[T]) =
 ## CAUTION: In Nim 2.0, assigning this to a 'var' variable will copy the data
 ## unless using 'addr' or direct access.
 proc getComponent*[T](entity: var Entity, _: typedesc[T]): var T =
-  let pool = entity.owner.getComponentPool[T]()
+  let pool = entity.owner.getComponentPool(T)
   let index = pool.entityToIndex[entity.id]
   return pool.data[index]
 #via id
@@ -385,6 +391,8 @@ iterator allWith*[T1, T2, T3, T4, T5, T6](ecs: MiniECS, t1: typedesc[T1], t2: ty
 
 #endregion
 
+
+#region Tests 
 # --- Unit Tests ---
 
 when defined(test):
@@ -418,3 +426,5 @@ when defined(test):
       ent.destroy()
       # Verify that the next entity creation recycles the ID
       check(world.freeEntities.len == 1)
+
+#endregion
