@@ -139,17 +139,17 @@ let activeCount = ecs.getEntityCount()
 
 # Destroy entity (Cleans up all components and enables recycling)
 ent.destroy()                 # Handle-based
-# ecs.destroy(ent.id)        # ID-based (Fastest for batches)
+# destroy(ent.id,ecs)        # ID-based (Fastest for batches)
 
 # --- 3. COMPONENT MANAGEMENT ---
 
 # Add/Update Component
 ent.addComponent(Position(x: 10, y: 10))        # Handle-based
-# ecs.addComponent(ent.id, Velocity(vx: 1, vy: 1), ecs) # ID-based
+# addComponent(ent.id, Velocity(vx: 1, vy: 1), ecs) # ID-based
 
 # Remove Component
 ent.removeComponent(Position)                   # Handle-based
-# ecs.removeComponent(ent.id, Position, ecs)    # ID-based
+# removeComponent(ent.id, Position, ecs)    # ID-based
 
 # Check Component Existence
 if ent.hasComponent(Position): discard          # Handle-based
@@ -160,7 +160,7 @@ if ent.hasComponent(Position): discard          # Handle-based
 # Direct Field Manipulation (One-liner)
 # Since getComponent returns 'var T', you can modify fields directly
 ent.getComponent(Position).x += 5.0             # Handle-based
-# ecs.getComponent(ent.id, Position, ecs).y = 0.0 # ID-based
+# getComponent(ent.id, Position, ecs).y = 0.0 # ID-based
 
 # Using 'addr' for manual optimization (Avoids hidden copies in some Nim versions)
 var pos = addr ent.getComponent(Position)
