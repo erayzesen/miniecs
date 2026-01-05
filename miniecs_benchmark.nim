@@ -111,11 +111,11 @@ proc runTest(n: int) =
   echo "Standard ECS Update: ", (endECS - startECS)
 
   # 3. Direct Data ECS Test
-  echo "Starting BoundCheck-off Optimised ECS..."
+  #[ echo "Starting BoundCheck-off Optimised ECS..."
   startECS = getMonoTime()
   updateECS_Pro(world)
   endECS = getMonoTime()
-  echo "BoundCheck-off Optimised ECS Update: ", (endECS - startECS)
+  echo "BoundCheck-off Optimised ECS Update: ", (endECS - startECS) ]#
 
   # 4. Direct Data ECS Test
   echo "Starting Direct Data Oriented ECS..."

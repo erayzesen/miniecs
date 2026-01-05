@@ -2,7 +2,7 @@
 #   Repository: https://github.com/erayzesen/miniecs
 #   License information: https://github.com/erayzesen/miniecs/blob/master/LICENSE
 
-#   Version: 1.0.0
+#   Version: 1.0.1
 
 import tables, std/[sequtils,macros], typetraits
 
@@ -264,9 +264,9 @@ iterator allWith*[T1, T2](ecs: MiniECS, t1: typedesc[T1], t2: typedesc[T2]): tup
   if pool1.data.len > 0 and pool2.data.len > 0:
     let entitiesPtr = cast[ptr UncheckedArray[Entity]](addr ecs.entities[0])
     let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0])
-    let p1E2I = cast[ptr UncheckedArray[int32]](addr pool1.entityToIndex[0])
+    let p1E2I = cast[ptr UncheckedArray[int]](addr pool1.entityToIndex[0])
     let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0])
-    let p2E2I = cast[ptr UncheckedArray[int32]](addr pool2.entityToIndex[0])
+    let p2E2I = cast[ptr UncheckedArray[int]](addr pool2.entityToIndex[0])
     
     # Always iterate over the smaller pool for speed
     if pool1.data.len <= pool2.data.len:
@@ -301,11 +301,11 @@ iterator allWith*[T1, T2, T3](ecs: MiniECS, t1: typedesc[T1], t2: typedesc[T2], 
     let entitiesPtr = cast[ptr UncheckedArray[Entity]](addr ecs.entities[0])
     
     let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0])
-    let p1E2I = cast[ptr UncheckedArray[int32]](addr pool1.entityToIndex[0])
+    let p1E2I = cast[ptr UncheckedArray[int]](addr pool1.entityToIndex[0])
     let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0])
-    let p2E2I = cast[ptr UncheckedArray[int32]](addr pool2.entityToIndex[0])
+    let p2E2I = cast[ptr UncheckedArray[int]](addr pool2.entityToIndex[0])
     let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0])
-    let p3E2I = cast[ptr UncheckedArray[int32]](addr pool3.entityToIndex[0])
+    let p3E2I = cast[ptr UncheckedArray[int]](addr pool3.entityToIndex[0])
     let sI2E = cast[ptr UncheckedArray[int]](addr pool1.indexToEntity[0])
 
     {.push checks: off.}
@@ -327,13 +327,13 @@ iterator allWith*[T1, T2, T3, T4](ecs: MiniECS, t1: typedesc[T1], t2: typedesc[T
     let entitiesPtr = cast[ptr UncheckedArray[Entity]](addr ecs.entities[0])
     
     let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0])
-    let p1E2I = cast[ptr UncheckedArray[int32]](addr pool1.entityToIndex[0])
+    let p1E2I = cast[ptr UncheckedArray[int]](addr pool1.entityToIndex[0])
     let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0])
-    let p2E2I = cast[ptr UncheckedArray[int32]](addr pool2.entityToIndex[0])
+    let p2E2I = cast[ptr UncheckedArray[int]](addr pool2.entityToIndex[0])
     let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0])
-    let p3E2I = cast[ptr UncheckedArray[int32]](addr pool3.entityToIndex[0])
+    let p3E2I = cast[ptr UncheckedArray[int]](addr pool3.entityToIndex[0])
     let p4Data = cast[ptr UncheckedArray[T4]](addr pool4.data[0])
-    let p4E2I = cast[ptr UncheckedArray[int32]](addr pool4.entityToIndex[0])
+    let p4E2I = cast[ptr UncheckedArray[int]](addr pool4.entityToIndex[0])
     
     let sI2E = cast[ptr UncheckedArray[int]](addr pool1.indexToEntity[0])
 
@@ -356,11 +356,11 @@ iterator allWith*[T1, T2, T3, T4, T5](ecs: MiniECS, t1: typedesc[T1], t2: typede
     let combinedMask = pool1.bitCode or pool2.bitCode or pool3.bitCode or pool4.bitCode or pool5.bitCode
     let entitiesPtr = cast[ptr UncheckedArray[Entity]](addr ecs.entities[0])
     
-    let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0]); let p1E2I = cast[ptr UncheckedArray[int32]](addr pool1.entityToIndex[0])
-    let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0]); let p2E2I = cast[ptr UncheckedArray[int32]](addr pool2.entityToIndex[0])
-    let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0]); let p3E2I = cast[ptr UncheckedArray[int32]](addr pool3.entityToIndex[0])
-    let p4Data = cast[ptr UncheckedArray[T4]](addr pool4.data[0]); let p4E2I = cast[ptr UncheckedArray[int32]](addr pool4.entityToIndex[0])
-    let p5Data = cast[ptr UncheckedArray[T5]](addr pool5.data[0]); let p5E2I = cast[ptr UncheckedArray[int32]](addr pool5.entityToIndex[0])
+    let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0]); let p1E2I = cast[ptr UncheckedArray[int]](addr pool1.entityToIndex[0])
+    let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0]); let p2E2I = cast[ptr UncheckedArray[int]](addr pool2.entityToIndex[0])
+    let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0]); let p3E2I = cast[ptr UncheckedArray[int]](addr pool3.entityToIndex[0])
+    let p4Data = cast[ptr UncheckedArray[T4]](addr pool4.data[0]); let p4E2I = cast[ptr UncheckedArray[int]](addr pool4.entityToIndex[0])
+    let p5Data = cast[ptr UncheckedArray[T5]](addr pool5.data[0]); let p5E2I = cast[ptr UncheckedArray[int]](addr pool5.entityToIndex[0])
     
     let sI2E = cast[ptr UncheckedArray[int]](addr pool1.indexToEntity[0])
 
@@ -384,12 +384,12 @@ iterator allWith*[T1, T2, T3, T4, T5, T6](ecs: MiniECS, t1: typedesc[T1], t2: ty
     let combinedMask = pool1.bitCode or pool2.bitCode or pool3.bitCode or pool4.bitCode or pool5.bitCode or pool6.bitCode
     let entitiesPtr = cast[ptr UncheckedArray[Entity]](addr ecs.entities[0])
     
-    let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0]); let p1E2I = cast[ptr UncheckedArray[int32]](addr pool1.entityToIndex[0])
-    let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0]); let p2E2I = cast[ptr UncheckedArray[int32]](addr pool2.entityToIndex[0])
-    let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0]); let p3E2I = cast[ptr UncheckedArray[int32]](addr pool3.entityToIndex[0])
-    let p4Data = cast[ptr UncheckedArray[T4]](addr pool4.data[0]); let p4E2I = cast[ptr UncheckedArray[int32]](addr pool4.entityToIndex[0])
-    let p5Data = cast[ptr UncheckedArray[T5]](addr pool5.data[0]); let p5E2I = cast[ptr UncheckedArray[int32]](addr pool5.entityToIndex[0])
-    let p6Data = cast[ptr UncheckedArray[T6]](addr pool6.data[0]); let p6E2I = cast[ptr UncheckedArray[int32]](addr pool6.entityToIndex[0])
+    let p1Data = cast[ptr UncheckedArray[T1]](addr pool1.data[0]); let p1E2I = cast[ptr UncheckedArray[int]](addr pool1.entityToIndex[0])
+    let p2Data = cast[ptr UncheckedArray[T2]](addr pool2.data[0]); let p2E2I = cast[ptr UncheckedArray[int]](addr pool2.entityToIndex[0])
+    let p3Data = cast[ptr UncheckedArray[T3]](addr pool3.data[0]); let p3E2I = cast[ptr UncheckedArray[int]](addr pool3.entityToIndex[0])
+    let p4Data = cast[ptr UncheckedArray[T4]](addr pool4.data[0]); let p4E2I = cast[ptr UncheckedArray[int]](addr pool4.entityToIndex[0])
+    let p5Data = cast[ptr UncheckedArray[T5]](addr pool5.data[0]); let p5E2I = cast[ptr UncheckedArray[int]](addr pool5.entityToIndex[0])
+    let p6Data = cast[ptr UncheckedArray[T6]](addr pool6.data[0]); let p6E2I = cast[ptr UncheckedArray[int]](addr pool6.entityToIndex[0])
     
     let sI2E = cast[ptr UncheckedArray[int]](addr pool1.indexToEntity[0])
 
