@@ -2,7 +2,7 @@
 #   Repository: https://github.com/erayzesen/miniecs
 #   License information: https://github.com/erayzesen/miniecs/blob/master/LICENSE
 
-#   Version: 1.0.1
+#   Version: 1.0.2
 
 import tables, std/[sequtils,macros], typetraits
 
@@ -12,7 +12,7 @@ type
     ## and a reference to its parent ECS world.
     Entity* = object
         id: int
-        components*: int = 0
+        components: int = 0
         alive: bool = true
         owner: MiniECS
 
@@ -109,11 +109,15 @@ proc newEntity*(ecs: MiniECS): Entity =
     ecs.entities.add(Entity(id: id, components: 0, alive: true, owner: ecs))
     return ecs.entities[id]
 
-## Returns an Entity with ID
+## Returns the Entity with ID
 proc getEntity*(ecs:MiniECS, id:int): var Entity = 
   assert id >= 0 and id < ecs.entities.len, "Entity ID out of bounds"
   assert ecs.entities[id].alive, "Attempted to access a dead entity with ID: " & $id
   return ecs.entities[id]
+
+## Returns the ID of the Entity
+proc getID*(entity:Entity) : int =
+  result=entity.id
 
 ## Returns Entity Count
 proc getEntityCount*(ecs:MiniECS) : int =
@@ -128,7 +132,7 @@ proc hasComponent(entity: var Entity, componentBitCode: int): bool =
 #via id 
 proc hasComponent*[T](entityID: int, component: typedesc[T],ecs:MiniECS): bool =
     result = (ecs.entities[entityID].components and ecs.getComponentPool(component).bitCode) != 0
-proc hasComponent*[T](entity: var Entity, component: typedesc[T]): bool =
+proc hasComponent*[T](entity: Entity, component: typedesc[T]): bool =
     result = (entity.components and entity.owner.getComponentPool(component).bitCode) != 0
 
 ## Adds a component to an entity. If it already exists, updates the value.
@@ -194,13 +198,13 @@ proc removeComponent*[T](entity: var Entity, _: typedesc[T]) =
 ## Returns a mutable reference (var T) to the entity's component.
 ## CAUTION: In Nim 2.0, assigning this to a 'var' variable will copy the data
 ## unless using 'addr' or direct access.
-proc getComponent*[T](entity: var Entity, _: typedesc[T]): var T =
+proc getComponent*[T](entity: Entity, _: typedesc[T]): var T =
   let pool = entity.owner.getComponentPool(T)
   let index = pool.entityToIndex[entity.id]
   return pool.data[index]
 #via id
 proc getComponent*[T](entityID: int, _: typedesc[T], ecs:MiniECS): var T =
-  let pool = ecs.getComponentPool[T]()
+  let pool = ecs.getComponentPool(T)
   let index = pool.entityToIndex[entityID]
   return pool.data[index]
 
@@ -234,6 +238,7 @@ proc destroy*(entity: var Entity) =
 
 ## Wipes the entire ECS state.
 proc clearAll*(ecs: MiniECS) =
+  ecs.poolTable.clear()
   ecs.componentPools = @[]
   ecs.entities = @[]
   ecs.freeEntities = @[]
